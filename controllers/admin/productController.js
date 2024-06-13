@@ -10,7 +10,7 @@ exports.createProduct = async (req, res) => {
   }
 
   try {
-    const { title, description, price, image_url } = req.body;
+    const { title, description, category, price, image_url } = req.body;
 
     // Check if a product with the same title already exists
     const existingProduct = await Product.findOne({ title });
@@ -21,7 +21,14 @@ exports.createProduct = async (req, res) => {
       });
     }
 
-    const product = Product.create({ title, description, price, image_url });
+    const product = await Product.create({
+      title,
+      description,
+      category,
+      price,
+      image_url,
+    });
+
     return res.status(201).json({
       success: true,
       data: product,
@@ -37,9 +44,79 @@ exports.createProduct = async (req, res) => {
   }
 };
 
+exports.updateProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { title, description, category, price, image_url } = req.body;
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    if (title) {
+      product.title = title;
+    }
+
+    if (description) {
+      product.description = description;
+    }
+
+    if (price) {
+      product.price = price;
+    }
+
+    if (image_url) {
+      product.image_url = image_url;
+    }
+
+    if (category) {
+      product.category = category;
+    }
+
+    await product.save();
+
+    return res.status(201).json({
+      success: true,
+      data: product,
+    });
+  } catch (error) {
+    console.log({ err });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: err.message,
+    });
+  }
+};
+
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.find();
+
+    return res.status(200).json({
+      success: true,
+      data: products,
+    });
+  } catch (err) {
+    console.log({ err });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: err.message,
+    });
+  }
+};
+
+exports.getProductsByCat = async (req, res) => {
+  try {
+    const { category } = req.body;
+
+    const products = await Product.find({ category });
 
     return res.status(200).json({
       success: true,
@@ -71,51 +148,6 @@ exports.deleteProduct = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log({ err });
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: err.message,
-    });
-  }
-};
-
-exports.updateProduct = async (req, res) => {
-  try {
-    const productId = req.params.id;
-    const { title, description, price, image_url } = req.body;
-
-    const product = await Product.findById(productId);
-
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: "Product not found",
-      });
-    }
-
-    if (title) {
-      product.title = title;
-    }
-
-    if (description) {
-      product.description = description;
-    }
-
-    if (price) {
-      product.price = price;
-    }
-
-    if (image_url) {
-      product.image_url = image_url;
-    }
-    await product.save();
-
-    return res.status(201).json({
-      success: true,
-      data: product,
-    });
-  } catch (error) {
     console.log({ err });
     return res.status(500).json({
       success: false,
