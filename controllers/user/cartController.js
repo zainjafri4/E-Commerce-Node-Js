@@ -3,11 +3,20 @@ const Product = require("../../models/adminModels/productModels.js");
 const Cart = require("../../models/userModels/cartModels.js");
 
 const addToCart = async (req, res) => {
-  const { userId, productId, quantity } = req.body;
   try {
+    const user = req.user;
+    const userId = user?._id;
+
+    const { productId } = req.params;
+
+    const { quantity } = req.body;
+
     const product = await Product.findById(productId);
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
     }
 
     let cart = await Cart.findOne({ userId });
@@ -16,15 +25,14 @@ const addToCart = async (req, res) => {
       cart = new Cart({ userId, items: [] });
     }
 
-    const productIndex = cart.items.findIndex((item) =>
+    const productFound = cart.items.find((item) =>
       item.productId.equals(productId)
     );
 
-    if (productIndex > -1) {
+    if (productFound) {
       // Product exists in the cart, update quantity and total price
-      cart.items[productIndex].quantity += quantity;
-      cart.items[productIndex].totalPrice =
-        cart.items[productIndex].quantity * product.price;
+      productFound.quantity += quantity;
+      productFound.totalPrice = productFound.quantity * product.price;
     } else {
       // Product does not exist in the cart, add new product
       cart.items.push({
@@ -36,84 +44,144 @@ const addToCart = async (req, res) => {
 
     await cart.save();
 
-    res.status(200).json({ message: "Product added to cart", cart });
+    return res.status(201).json({
+      success: true,
+      data: cart,
+      message: "Product Added To Cart",
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.log({ err });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: err.message,
+    });
   }
 };
+
 const decreaseQuantity = async (req, res) => {
-  const { userId, productId, quantity } = req.body;
   try {
+    const user = req.user;
+    const userId = user?._id;
+
+    const { productId } = req.params;
+
+    const { quantity } = req.body;
+
     const product = await Product.findById(productId);
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
     }
 
-    let cart = await Cart.findOne({ userId });
+    const cart = await Cart.findOne({ userId });
     if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
+      return res.status(404).json({
+        success: false,
+        message: "No Cart Created",
+      });
     }
 
-    const productIndex = cart.items.findIndex((item) =>
+    const productFound = cart.items.find((item) =>
       item.productId.equals(productId)
     );
-    if (productIndex > -1) {
+    if (productFound) {
       // Product exists in the cart, decrease quantity
-      cart.items[productIndex].quantity -= quantity;
-      if (cart.items[productIndex].quantity <= 0) {
+      productFound.quantity -= quantity;
+      if (productFound.quantity <= 0) {
         // Remove the item from the cart if quantity is zero or less
-        cart.items.splice(productIndex, 1);
+        cart.items.splice(productFound, 1);
       } else {
         // Update the total price if the item is still in the cart
-        cart.items[productIndex].totalPrice =
-          cart.items[productIndex].quantity * product.price;
+        productFound.totalPrice = productFound.quantity * product.price;
       }
-    } else {
-      return res.status(404).json({ error: "Product not found in cart" });
+
+      await cart.save();
     }
 
-    await cart.save();
-
-    res
-      .status(200)
-      .json({ message: "Product quantity decreased in cart", cart });
+    return res.status(201).json({
+      success: true,
+      data: cart,
+      message: "Quanitity Reduced From Cart",
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.log({ err });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: err.message,
+    });
   }
 };
 
 const removeFromCart = async (req, res) => {
-  const { userId, productId } = req.body;
   try {
-    let cart = await Cart.findOne({ userId });
+    const user = req.user;
+    const userId = user?._id;
+
+    const { productId } = req.params;
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    const cart = await Cart.findOne({ userId });
     if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
+      return res.status(404).json({
+        success: false,
+        message: "No Cart Created",
+      });
     }
 
     cart.items = cart.items.filter((item) => !item.productId.equals(productId));
 
     await cart.save();
 
-    res.status(200).json({ message: "Product removed from cart" });
+    return res.status(201).json({
+      success: true,
+      data: cart,
+      message: "Product Removed From Cart",
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.log({ err });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: err.message,
+    });
   }
 };
 
 const getUserCart = async (req, res) => {
-  const { userId } = req.params; // Correctly retrieve userId from req.params
   try {
-    const cart = await Cart.findOne({ userId }).populate("items.productId");
+    const { userId } = req.user._id;
+
+    const cart = await Cart.findOne({ userId });
     if (!cart) {
-      return res.status(404).json({ error: "Cart not found" });
+      return res.status(404).json({
+        success: false,
+        message: "No Cart Created",
+      });
     }
-    res.status(200).json({ cart });
+
+    return res.status(201).json({
+      success: true,
+      data: cart,
+      message: "Product Removed From Cart",
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.log({ err });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: err.message,
+    });
   }
 };
 

@@ -5,37 +5,20 @@ const {
   getUserCart,
   decreaseQuantity,
 } = require("../../controllers/user/cartController.js");
-const cartmiddleware = require("../../middleware/auth/authMiddleware.js");
-const {
-  addtocartValidator,
-  removetocartValidator,
-  validate,
-} = require("../../validators/cart/cartvalidator");
+const authMiddleware = require("../../middleware/auth/authMiddleware.js");
 
 const router = express.Router();
 
 // Add to cart route
-router.post("/add", cartmiddleware, addtocartValidator, validate, addToCart);
+router.post("/:productId/add", authMiddleware, addToCart);
 
 // Add to cart route
-router.post(
-  "/decrease",
-  cartmiddleware,
-  addtocartValidator,
-  validate,
-  decreaseQuantity
-);
+router.post("/:productId/decrease", authMiddleware, decreaseQuantity);
 
 // Remove from cart route
-router.post(
-  "/remove",
-  cartmiddleware,
-  removetocartValidator,
-  validate,
-  removeFromCart
-);
+router.post("/remove", authMiddleware, removeFromCart);
 
 // Get user cart route
-router.get("/cartdata/:userId", cartmiddleware, getUserCart);
+router.get("/getCart", authMiddleware, getUserCart);
 
 module.exports = router;
