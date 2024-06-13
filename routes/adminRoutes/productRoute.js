@@ -1,21 +1,29 @@
 // routes/productRoutes.js
 const express = require("express");
 const router = express.Router();
-const productController = require("../../controllers/admin/productController");
-const productmiddleware = require("../middleware/authverify");
-const { productValidationRules } = require("../validators/productValidator");
 
-router.post(
-  "/product",
-  productmiddleware,
-  productValidationRules(),
-  productController.createProduct
-);
-router.get("/products", productmiddleware, productController.getProducts);
-router.delete(
-  "/product/:id",
-  productmiddleware,
-  productController.deleteProduct
-);
-router.put("/products/:id", productmiddleware, productController.updateProduct);
+const {
+  createProduct,
+  getProducts,
+  updateProduct,
+  deleteProduct,
+  addProductReview,
+} = require("../../controllers/admin/productController");
+
+const authMiddleware = require("../../middleware/auth/authMiddleware.js");
+
+const {
+  productValidator,
+} = require("../../validators/product/productValidator");
+
+router.post("/product", authMiddleware, productValidator(), createProduct);
+
+router.get("/products", authMiddleware, getProducts);
+
+router.delete("/:productId/delete", authMiddleware, deleteProduct);
+
+router.put("/:productId/update/", authMiddleware, updateProduct);
+
+router.put("/:productId/add-rating/", authMiddleware, addProductReview);
+
 module.exports = router;

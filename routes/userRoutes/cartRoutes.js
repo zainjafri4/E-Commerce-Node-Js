@@ -4,13 +4,13 @@ const {
   removeFromCart,
   getUserCart,
   decreaseQuantity,
-} = require("../../controllers/cartController");
-const cartmiddleware = require("../middleware/authverify");
+} = require("../../controllers/user/cartController.js");
+const cartmiddleware = require("../../middleware/auth/authMiddleware.js");
 const {
   addtocartValidator,
   removetocartValidator,
   validate,
-} = require("../validators/cartvalidator");
+} = require("../../validators/cart/cartvalidator");
 
 const router = express.Router();
 

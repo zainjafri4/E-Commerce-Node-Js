@@ -6,15 +6,16 @@ const {
   deleteUser,
   requestPasswordReset,
   resetPassword,
-} = require("../controllers/user/authController.js");
+} = require("../../controllers/user/authController.js");
 
-const authmiddleware = require("../middleware/authverify");
+const authmiddleware = require("../../middleware/auth/authMiddleware.js");
+
 const {
   signupValidator,
   loginValidator,
   passwordResetReqValidator,
   passwordResetValidtor,
-} = require("../validators/userValidator");
+} = require("../../validators/auth/authValidator.js");
 
 // Route for user signup
 router.post("/signup", signupValidator, signup);
