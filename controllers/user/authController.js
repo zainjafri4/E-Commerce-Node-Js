@@ -32,7 +32,7 @@ exports.signup = async (req, res) => {
       type,
     } = req.body;
 
-    const profileUrl = req.file.originalname;
+    const profileImageName = req.file.originalname;
 
     if (!firstName || !lastName) {
       return res.status(422).json({
@@ -74,7 +74,7 @@ exports.signup = async (req, res) => {
       country,
       zipCode,
       type,
-      profileUrl,
+      profileImageName,
       emailVerificationToken: verificationToken,
       emailVerificationTokenExpires: Date.now() + 3600000, // 1 hour
     });
@@ -185,7 +185,7 @@ exports.updateUser = async (req, res) => {
       type,
     } = req.body;
 
-    const profileUrl = req.file.originalname;
+    const profileImageName = req.file.originalname;
 
     const user = await User.findById(userId);
 
@@ -205,11 +205,12 @@ exports.updateUser = async (req, res) => {
     if (email) {
       user.email = email;
     }
-    if (profileUrl) {
-      if (user.profileUrl) {
-        fs.unlinkSync(user.profileUrl);
+    if (profileImageName) {
+      if (user.profileImageName) {
+        const path = `../../upload/images/${user.profileImageName}`;
+        fs.unlinkSync(path);
       }
-      user.profileUrl = profileUrl;
+      user.profileImageName = profileImageName;
     }
     if (phoneNo) {
       user.phoneNo = phoneNo;

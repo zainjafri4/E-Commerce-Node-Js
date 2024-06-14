@@ -33,7 +33,7 @@ const UserSchema = new mongoose.Schema(
     phoneNo: {
       type: String,
     },
-    profileUrl: {
+    profileImageName: {
       type: String,
     },
     type: {

@@ -12,7 +12,7 @@ exports.createProduct = async (req, res) => {
   try {
     const { title, description, category, price, stock, color } = req.body;
 
-    const imageUrl = req.file.originalname;
+    const ImageFileName = req.file.originalname;
 
     // Check if a product with the same title already exists
     const existingProduct = await Product.findOne({ title });
@@ -30,7 +30,7 @@ exports.createProduct = async (req, res) => {
       price,
       stock,
       color,
-      imageUrl,
+      ImageFileName,
     });
 
     return res.status(201).json({
@@ -62,7 +62,7 @@ exports.updateProduct = async (req, res) => {
     const { title, description, category, price, stock, color, image_url } =
       req.body;
 
-    const imageUrl = req.file.originalname;
+    const ImageFileName = req.file.originalname;
 
     const product = await Product.findById(productId);
 
@@ -93,11 +93,12 @@ exports.updateProduct = async (req, res) => {
       product.color = color;
     }
 
-    if (imageUrl) {
-      if (product.imageUrl) {
-        fs.unlinkSync(product.imageUrl);
+    if (ImageFileName) {
+      if (product.ImageFileName) {
+        const path = `../../upload/images/${product.ImageFileName}`;
+        fs.unlinkSync(path);
       }
-      product.imageUrl = imageUrl;
+      product.ImageFileName = ImageFileName;
     }
 
     if (category) {

@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema(
     stock: {
       type: String,
     },
-    imageUrl: {
+    ImageFileName: {
       type: String,
     },
     averageRating: {
