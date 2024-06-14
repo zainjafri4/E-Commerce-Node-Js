@@ -17,6 +17,13 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    color: {
+      type: String,
+      required: true,
+    },
+    stock: {
+      type: String,
+    },
     image_url: {
       type: String,
     },
@@ -30,6 +37,10 @@ const productSchema = new mongoose.Schema(
         ref: "ProductReviews",
       },
     ],
+    status: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: { createdAt: "created_at" } }
 );

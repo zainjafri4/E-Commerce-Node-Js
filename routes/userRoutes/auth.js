@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   signup,
   login,
+  updateUser,
   deleteUser,
   requestPasswordReset,
   resetPassword,
@@ -22,6 +23,9 @@ router.post("/signup", signupValidator, signup);
 
 // Route for user login
 router.post("/login", loginValidator, login);
+
+// Route for user login
+router.post("/update", authmiddleware, updateUser);
 
 // Route to delete an admin by ID
 router.delete("/:userId/delete", authmiddleware, deleteUser);

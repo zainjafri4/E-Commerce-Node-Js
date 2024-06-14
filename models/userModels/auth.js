@@ -28,6 +28,18 @@ const UserSchema = new mongoose.Schema(
       enum: ["user", "admin"], // Restrict userType to 'user' or 'admin'
       default: "user", // Default userType is 'user'
     },
+    address: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    country: {
+      type: String,
+    },
+    zipCode: {
+      type: String,
+    },
     resetPasswordToken: {
       type: String,
     },

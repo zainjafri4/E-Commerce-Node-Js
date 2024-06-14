@@ -10,7 +10,8 @@ exports.createProduct = async (req, res) => {
   }
 
   try {
-    const { title, description, category, price, image_url } = req.body;
+    const { title, description, category, price, stock, color, image_url } =
+      req.body;
 
     // Check if a product with the same title already exists
     const existingProduct = await Product.findOne({ title });
@@ -26,6 +27,8 @@ exports.createProduct = async (req, res) => {
       description,
       category,
       price,
+      stock,
+      color,
       image_url,
     });
 
@@ -52,7 +55,8 @@ exports.updateProduct = async (req, res) => {
 
   try {
     const productId = req.params.id;
-    const { title, description, category, price, image_url } = req.body;
+    const { title, description, category, price, stock, color, image_url } =
+      req.body;
 
     const product = await Product.findById(productId);
 
@@ -73,6 +77,14 @@ exports.updateProduct = async (req, res) => {
 
     if (price) {
       product.price = price;
+    }
+
+    if (stock) {
+      product.stock = stock;
+    }
+
+    if (color) {
+      product.color = color;
     }
 
     if (image_url) {

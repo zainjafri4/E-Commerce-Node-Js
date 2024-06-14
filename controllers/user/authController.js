@@ -16,7 +16,18 @@ exports.signup = async (req, res) => {
 
   try {
     // Extract user data from request body
-    const { firstName, lastName, email, phoneNo, password, type } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      phoneNo,
+      address,
+      city,
+      country,
+      zipCode,
+      password,
+      type,
+    } = req.body;
 
     if (!firstName || !lastName) {
       return res.status(422).json({
@@ -50,6 +61,10 @@ exports.signup = async (req, res) => {
       email,
       password,
       phoneNo,
+      address,
+      city,
+      country,
+      zipCode,
       type,
     });
 
@@ -112,6 +127,77 @@ exports.login = async (req, res) => {
       data: { payload },
     });
   } catch (err) {
+    console.log({ err });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: err.message,
+    });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  try {
+    const userId = req.user?._id;
+
+    // Extract user data from request body
+    const {
+      firstName,
+      lastName,
+      email,
+      phoneNo,
+      address,
+      city,
+      country,
+      zipCode,
+      password,
+      type,
+    } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User Not Found",
+      });
+    }
+
+    if (firstName) {
+      user.name.firstName = firstName;
+    }
+    if (lastName) {
+      user.name.lastName = lastName;
+    }
+    if (email) {
+      user.email = email;
+    }
+    if (phoneNo) {
+      user.phoneNo = phoneNo;
+    }
+    if (address) {
+      user.address = address;
+    }
+    if (city) {
+      user.city = city;
+    }
+    if (country) {
+      user.country = country;
+    }
+    if (zipCode) {
+      user.zipCode = zipCode;
+    }
+    if (password) {
+      user.password = password;
+    }
+    await user.save();
+
+    return res.status(201).json({
+      success: true,
+      data: user,
+      message: "User Updated",
+    });
+  } catch (error) {
     console.log({ err });
     return res.status(500).json({
       success: false,
