@@ -19,7 +19,7 @@ const {
 
 router.post("/product", authMiddleware, productValidator(), createProduct);
 
-router.get("/products", authMiddleware, getProducts);
+router.get("/products", getProducts);
 
 router.get("/user-products", authMiddleware, getMyProducts);
 
