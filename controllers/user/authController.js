@@ -80,6 +80,7 @@ exports.signup = async (req, res) => {
 
     return res.status(201).json({
       success: true,
+      message: "Email Verification Email Sent",
       data: newUser,
     });
   } catch (err) {
