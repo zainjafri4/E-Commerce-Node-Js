@@ -38,15 +38,15 @@ exports.createProduct = async (req, res) => {
       data: product,
       message: "Product Added Successfully",
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     if (req.file) {
       fs.unlinkSync(req.file.path);
     }
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -112,14 +112,14 @@ exports.updateProduct = async (req, res) => {
       data: product,
     });
   } catch (error) {
-    console.log({ err });
+    console.log({ error });
     if (req.file) {
       fs.unlinkSync(req.file.path);
     }
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -140,12 +140,12 @@ exports.getProducts = async (req, res) => {
       success: true,
       data: productData,
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -166,12 +166,12 @@ exports.getMyProducts = async (req, res) => {
       success: true,
       data: productData,
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -191,12 +191,12 @@ exports.deleteProduct = async (req, res) => {
         message: "Product not found",
       });
     }
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };

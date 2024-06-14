@@ -88,15 +88,15 @@ exports.signup = async (req, res) => {
       message: "Email Verification Email Sent",
       data: newUser,
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     if (req.file) {
       fs.unlinkSync(req.file.path);
     }
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -157,12 +157,12 @@ exports.login = async (req, res) => {
       success: true,
       data: { payload },
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -238,14 +238,14 @@ exports.updateUser = async (req, res) => {
       message: "User Updated",
     });
   } catch (error) {
-    console.log({ err });
+    console.log({ error });
     if (req.file) {
       fs.unlinkSync(req.file.path);
     }
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -299,12 +299,12 @@ exports.requestPasswordReset = async (req, res) => {
       message: "Password reset email sent",
       data: resetPasswordToken,
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -318,7 +318,7 @@ exports.resetPassword = async (req, res) => {
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (err) {
+    } catch (error) {
       return res.status(400).json({
         success: false,
         message: "Invalid or expired token",
@@ -354,12 +354,12 @@ exports.resetPassword = async (req, res) => {
       success: true,
       message: "Password Reset successfully",
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -384,12 +384,12 @@ exports.deleteUser = async (req, res) => {
       success: true,
       message: "User Deleted",
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -425,12 +425,12 @@ exports.verifyUserAccount = async (req, res) => {
       success: true,
       message: "Email verified successfully!",
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };

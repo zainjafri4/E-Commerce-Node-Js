@@ -49,12 +49,12 @@ const addToCart = async (req, res) => {
       data: cart,
       message: "Product Added To Cart",
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -106,12 +106,12 @@ const decreaseQuantity = async (req, res) => {
       data: cart,
       message: "Quanitity Reduced From Cart",
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -148,12 +148,12 @@ const removeFromCart = async (req, res) => {
       data: cart,
       message: "Product Removed From Cart",
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };
@@ -175,12 +175,12 @@ const getUserCart = async (req, res) => {
       data: cart,
       message: "Product Removed From Cart",
     });
-  } catch (err) {
-    console.log({ err });
+  } catch (error) {
+    console.log({ error });
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      data: err.message,
+      data: error.message,
     });
   }
 };

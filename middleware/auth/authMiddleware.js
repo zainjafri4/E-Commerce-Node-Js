@@ -34,11 +34,11 @@ const authMiddleware = async (req, res, next) => {
 
     req.user = user;
     next();
-  } catch (err) {
-    console.error(err.message);
+  } catch (error) {
+    console.error(error.message);
 
     // Check if the error is a JWT error
-    if (err.name === "JsonWebTokenError") {
+    if (error.name === "JsonWebTokenError") {
       return res.status(401).json({
         success: false,
         message: "Unauthorized: Invalid token",
