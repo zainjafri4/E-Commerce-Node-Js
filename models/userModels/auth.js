@@ -17,6 +17,12 @@ const UserSchema = new mongoose.Schema(
       unique: true, // Ensure email is unique
       lowercase: true, // Store email in lowercase
     },
+    emailVerificationToken: {
+      type: String,
+    },
+    emailVerificationTokenExpires: {
+      type: Date,
+    },
     password: {
       typ: String,
     },

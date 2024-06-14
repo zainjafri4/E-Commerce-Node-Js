@@ -3,8 +3,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const { default: generateToken } = require("../../utils/generateToke.js");
-const sendEmail = require("../../utils/emailsend.js");
 const crypto = require("crypto");
+const {
+  customEmail,
+  emailVerification,
+} = require("../../utils/email/index.js");
 
 // Controller for user signup
 exports.signup = async (req, res) => {
@@ -54,7 +57,8 @@ exports.signup = async (req, res) => {
       });
     }
 
-    // Create a new user with hashed password
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+
     const newUser = await User.create({
       firstName,
       lastName,
@@ -66,7 +70,13 @@ exports.signup = async (req, res) => {
       country,
       zipCode,
       type,
+      emailVerificationToken: verificationToken,
+      emailVerificationTokenExpires: Date.now() + 3600000, // 1 hour
     });
+
+    const verificationLink = `${process.env.WEB_URL}/verify-email?token=${verificationToken}`;
+
+    await emailVerification(email, verificationLink);
 
     return res.status(201).json({
       success: true,
@@ -249,7 +259,7 @@ exports.requestPasswordReset = async (req, res) => {
       <p>Thank you,</p>
     `;
 
-    await sendEmail(user?.email, subject, body);
+    await customEmail(user?.email, subject, body);
 
     return res.status(200).json({
       success: true,
@@ -341,6 +351,46 @@ exports.deleteUser = async (req, res) => {
       success: true,
       message: "User Deleted",
     });
+  } catch (err) {
+    console.log({ err });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: err.message,
+    });
+  }
+};
+
+exports.verifyUserAccount = async (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid or missing token." });
+  }
+
+  try {
+    const user = await User.findOne({
+      emailVerificationToken: token,
+      emailVerificationTokenExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired token." });
+    }
+
+    user.emailVerification = true;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationTokenExpires = undefined;
+
+    await user.save();
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Email verified successfully!" });
   } catch (err) {
     console.log({ err });
     return res.status(500).json({

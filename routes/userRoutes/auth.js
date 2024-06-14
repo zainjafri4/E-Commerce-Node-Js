@@ -7,6 +7,7 @@ const {
   deleteUser,
   requestPasswordReset,
   resetPassword,
+  verifyUserAccount,
 } = require("../../controllers/user/authController.js");
 
 const authmiddleware = require("../../middleware/auth/authMiddleware.js");
@@ -37,5 +38,8 @@ router.post(
 );
 
 router.post("/reset-password/:token", passwordResetValidtor, resetPassword);
+
+// Route for verifying user email
+router.get("/verify-email", verifyUserAccount);
 
 module.exports = router;
