@@ -36,7 +36,7 @@ const UploadImageMulter = () => {
       }
 
       const allowedExtensions = [".jpg", ".jpeg", ".png"];
-      const ext = path.extname(req.file.originalname).toLowerCase();
+      const ext = path.extname(req?.file?.originalname).toLowerCase();
       if (!allowedExtensions.includes(ext)) {
         throw new Error("Only jpeg, jpg, or png files are allowed!");
       }

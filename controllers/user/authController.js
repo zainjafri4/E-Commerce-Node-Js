@@ -32,7 +32,7 @@ exports.signup = async (req, res) => {
       type,
     } = req.body;
 
-    const profileImageName = req.file.originalname;
+    const profileImageName = req?.file?.originalname;
 
     if (!firstName || !lastName) {
       return res.status(422).json({
@@ -185,7 +185,7 @@ exports.updateUser = async (req, res) => {
       type,
     } = req.body;
 
-    const profileImageName = req.file.originalname;
+    const profileImageName = req?.file?.originalname;
 
     const user = await User.findById(userId);
 

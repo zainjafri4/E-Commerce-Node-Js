@@ -12,7 +12,7 @@ exports.createProduct = async (req, res) => {
   try {
     const { title, description, category, price, stock, color } = req.body;
 
-    const ImageFileName = req.file.originalname;
+    const ImageFileName = req?.file?.originalname;
 
     // Check if a product with the same title already exists
     const existingProduct = await Product.findOne({ title });
@@ -62,7 +62,7 @@ exports.updateProduct = async (req, res) => {
     const { title, description, category, price, stock, color, image_url } =
       req.body;
 
-    const ImageFileName = req.file.originalname;
+    const ImageFileName = req?.file?.originalname;
 
     const product = await Product.findById(productId);
 
