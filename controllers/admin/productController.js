@@ -10,8 +10,9 @@ exports.createProduct = async (req, res) => {
   }
 
   try {
-    const { title, description, category, price, stock, color, image_url } =
-      req.body;
+    const { title, description, category, price, stock, color } = req.body;
+
+    const imageUrl = req.file.originalname;
 
     // Check if a product with the same title already exists
     const existingProduct = await Product.findOne({ title });
@@ -29,7 +30,7 @@ exports.createProduct = async (req, res) => {
       price,
       stock,
       color,
-      image_url,
+      imageUrl,
     });
 
     return res.status(201).json({
@@ -39,6 +40,9 @@ exports.createProduct = async (req, res) => {
     });
   } catch (err) {
     console.log({ err });
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -57,6 +61,8 @@ exports.updateProduct = async (req, res) => {
     const productId = req.params.id;
     const { title, description, category, price, stock, color, image_url } =
       req.body;
+
+    const imageUrl = req.file.originalname;
 
     const product = await Product.findById(productId);
 
@@ -87,8 +93,11 @@ exports.updateProduct = async (req, res) => {
       product.color = color;
     }
 
-    if (image_url) {
-      product.image_url = image_url;
+    if (imageUrl) {
+      if (product.imageUrl) {
+        fs.unlinkSync(product.imageUrl);
+      }
+      product.imageUrl = imageUrl;
     }
 
     if (category) {
@@ -103,6 +112,9 @@ exports.updateProduct = async (req, res) => {
     });
   } catch (error) {
     console.log({ err });
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",

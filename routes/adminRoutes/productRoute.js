@@ -16,8 +16,17 @@ const authMiddleware = require("../../middleware/auth/authMiddleware.js");
 const {
   productValidator,
 } = require("../../validators/product/productValidator");
+const {
+  UploadImageMulter,
+} = require("../../utils/multer/multerImageUpload.js");
 
-router.post("/create", authMiddleware, productValidator(), createProduct);
+router.post(
+  "/create",
+  authMiddleware,
+  productValidator(),
+  UploadImageMulter(),
+  createProduct
+);
 
 router.get("/get-all", getProducts);
 
@@ -25,7 +34,12 @@ router.get("/user-products", authMiddleware, getMyProducts);
 
 router.delete("/:productId/delete", authMiddleware, deleteProduct);
 
-router.put("/:productId/update/", authMiddleware, updateProduct);
+router.put(
+  "/:productId/update/",
+  authMiddleware,
+  UploadImageMulter(),
+  updateProduct
+);
 
 router.put("/:productId/add-rating/", authMiddleware, addProductReview);
 

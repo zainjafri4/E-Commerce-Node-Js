@@ -32,6 +32,8 @@ exports.signup = async (req, res) => {
       type,
     } = req.body;
 
+    const profileUrl = req.file.originalname;
+
     if (!firstName || !lastName) {
       return res.status(422).json({
         success: false,
@@ -72,6 +74,7 @@ exports.signup = async (req, res) => {
       country,
       zipCode,
       type,
+      profileUrl,
       emailVerificationToken: verificationToken,
       emailVerificationTokenExpires: Date.now() + 3600000, // 1 hour
     });
@@ -87,6 +90,9 @@ exports.signup = async (req, res) => {
     });
   } catch (err) {
     console.log({ err });
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",
@@ -179,6 +185,8 @@ exports.updateUser = async (req, res) => {
       type,
     } = req.body;
 
+    const profileUrl = req.file.originalname;
+
     const user = await User.findById(userId);
 
     if (!user) {
@@ -196,6 +204,12 @@ exports.updateUser = async (req, res) => {
     }
     if (email) {
       user.email = email;
+    }
+    if (profileUrl) {
+      if (user.profileUrl) {
+        fs.unlinkSync(user.profileUrl);
+      }
+      user.profileUrl = profileUrl;
     }
     if (phoneNo) {
       user.phoneNo = phoneNo;
@@ -224,6 +238,9 @@ exports.updateUser = async (req, res) => {
     });
   } catch (error) {
     console.log({ err });
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
     return res.status(500).json({
       success: false,
       message: "Internal Server Error",

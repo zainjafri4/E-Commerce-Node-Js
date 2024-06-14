@@ -33,6 +33,9 @@ const UserSchema = new mongoose.Schema(
     phoneNo: {
       type: String,
     },
+    profileUrl: {
+      type: String,
+    },
     type: {
       type: String,
       enum: ["user", "admin"], // Restrict userType to 'user' or 'admin'

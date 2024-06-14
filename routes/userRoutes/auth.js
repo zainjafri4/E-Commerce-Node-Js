@@ -18,15 +18,18 @@ const {
   passwordResetReqValidator,
   passwordResetValidtor,
 } = require("../../validators/auth/authValidator.js");
+const {
+  UploadImageMulter,
+} = require("../../utils/multer/multerImageUpload.js");
 
 // Route for user signup
-router.post("/signup", signupValidator, signup);
+router.post("/signup", signupValidator, UploadImageMulter(), signup);
 
 // Route for user login
 router.post("/login", loginValidator, login);
 
 // Route for user login
-router.post("/update", authmiddleware, updateUser);
+router.post("/update", authmiddleware, UploadImageMulter(), updateUser);
 
 // Route to delete an admin by ID
 router.delete("/:userId/delete", authmiddleware, deleteUser);
