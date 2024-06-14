@@ -17,9 +17,9 @@ const {
   productValidator,
 } = require("../../validators/product/productValidator");
 
-router.post("/product", authMiddleware, productValidator(), createProduct);
+router.post("/create", authMiddleware, productValidator(), createProduct);
 
-router.get("/products", getProducts);
+router.get("/get-all", getProducts);
 
 router.get("/user-products", authMiddleware, getMyProducts);
 

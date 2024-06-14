@@ -31,7 +31,7 @@ mongoose
   });
 
 // Use product routes
-app.use("/api", productRoutes);
+app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/cart", cartRoutes);
 const PORT = process.env.PORT || 8000;
