@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
       unique: true, // Ensure email is unique
       lowercase: true, // Store email in lowercase
     },
-    emailVeridication: {
+    emailVerification: {
       type: Boolean,
       default: false,
     },
@@ -28,7 +28,7 @@ const UserSchema = new mongoose.Schema(
       type: Date,
     },
     password: {
-      typ: String,
+      type: String,
     },
     phoneNo: {
       type: String,

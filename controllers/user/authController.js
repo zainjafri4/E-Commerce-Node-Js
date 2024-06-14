@@ -2,7 +2,7 @@ const User = require("../../models/userModels/auth.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
-const { default: generateToken } = require("../../utils/generateToke.js");
+const generateToken = require("../../utils/generateToke.js");
 const crypto = require("crypto");
 const {
   customEmail,
@@ -60,8 +60,10 @@ exports.signup = async (req, res) => {
     const verificationToken = crypto.randomBytes(32).toString("hex");
 
     const newUser = await User.create({
-      firstName,
-      lastName,
+      name: {
+        firstName,
+        lastName,
+      },
       email,
       password,
       phoneNo,
@@ -74,7 +76,7 @@ exports.signup = async (req, res) => {
       emailVerificationTokenExpires: Date.now() + 3600000, // 1 hour
     });
 
-    const verificationLink = `${process.env.WEB_URL}/verify-email?token=${verificationToken}`;
+    const verificationLink = `${process.env.WEB_URL}/api/auth/verify-email?token=${verificationToken}`;
 
     await emailVerification(email, verificationLink);
 
@@ -115,7 +117,7 @@ exports.login = async (req, res) => {
     }
 
     // Compare password with hashed password in database
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user?.password);
     if (!isMatch) {
       return res.status(422).json({
         success: false,
@@ -137,6 +139,11 @@ exports.login = async (req, res) => {
       email: user?.email,
       type: user?.type,
       number: user?.phoneNo,
+      emailVerification: user?.emailVerification,
+      address: user?.address,
+      city: user?.city,
+      country: user?.country,
+      zipCode: user?.zipCode,
       token: "Bearer " + generateToken(user?._id),
     };
 

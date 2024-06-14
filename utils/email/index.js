@@ -7,14 +7,13 @@ exports.customEmail = async (email, subject, body) => {
       host: "smtp.gmail.com",
       port: 465,
       auth: {
-        user: "<Emaill Address>", // Your Gmail address
-        pass: "<Password>", // Your app password
+        user: process.env?.FROM_EMAIL,
+        pass: process.env?.EMAIL_APP_PASS,
       },
     });
 
     await transporter.sendMail({
-      from: "<Email Address>", // Your email address
-      to: email,
+      from: process.env?.FROM_EMAIL,
       subject: subject,
       text: body,
     });
@@ -32,8 +31,8 @@ exports.emailVerification = async (email, verificationLink) => {
       port: 465,
       secure: true,
       auth: {
-        user: "<Email Address>", // Your Gmail address
-        pass: "<Password>", // Your app password
+        user: process.env?.FROM_EMAIL,
+        pass: process.env?.EMAIL_APP_PASS,
       },
     });
 
@@ -47,7 +46,7 @@ exports.emailVerification = async (email, verificationLink) => {
     `;
 
     await transporter.sendMail({
-      from: "<Email Address>", // Your email address
+      from: process.env?.FROM_EMAIL,
       to: email,
       subject: "Account Verification",
       html: emailBody,
