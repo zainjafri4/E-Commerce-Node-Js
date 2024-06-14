@@ -122,6 +122,13 @@ exports.login = async (req, res) => {
       });
     }
 
+    if (!user.emailVerification) {
+      return res.status(422).json({
+        success: false,
+        message: "Please Verify Your Email First",
+      });
+    }
+
     // Create a JWT payload with only userId
     const payload = {
       id: user?._id,
@@ -388,9 +395,10 @@ exports.verifyUserAccount = async (req, res) => {
 
     await user.save();
 
-    return res
-      .status(200)
-      .json({ success: true, message: "Email verified successfully!" });
+    return res.status(200).json({
+      success: true,
+      message: "Email verified successfully!",
+    });
   } catch (err) {
     console.log({ err });
     return res.status(500).json({
