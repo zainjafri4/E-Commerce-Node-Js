@@ -5,7 +5,7 @@ const router = express.Router();
 const {
   createProduct,
   getProducts,
-  getProductsByCat,
+  getMyProducts,
   updateProduct,
   deleteProduct,
   addProductReview,
@@ -21,7 +21,7 @@ router.post("/product", authMiddleware, productValidator(), createProduct);
 
 router.get("/products", authMiddleware, getProducts);
 
-router.get("/productsByCategory", authMiddleware, getProductsByCat);
+router.get("/user-products", authMiddleware, getMyProducts);
 
 router.delete("/:productId/delete", authMiddleware, deleteProduct);
 

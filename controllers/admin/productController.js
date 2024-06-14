@@ -113,11 +113,19 @@ exports.updateProduct = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
   try {
+    let productData = [];
+
     const products = await Product.find();
+    if (products && products.length > 0) {
+      for (const product of products) {
+        const reviews = await ProductReviews.find({ productId: product?._id });
+        productData.push({ product, reviews });
+      }
+    }
 
     return res.status(200).json({
       success: true,
-      data: products,
+      data: productData,
     });
   } catch (err) {
     console.log({ err });
@@ -129,15 +137,21 @@ exports.getProducts = async (req, res) => {
   }
 };
 
-exports.getProductsByCat = async (req, res) => {
+exports.getMyProducts = async (req, res) => {
   try {
-    const { category } = req.body;
+    const userId = req.user._id;
+    let productData = [];
 
-    const products = await Product.find({ category });
-
+    const products = await Product.find({ userId });
+    if (products && products.length > 0) {
+      for (const product of products) {
+        const reviews = await ProductReviews.find({ productId: product?._id });
+        productData.push({ product, reviews });
+      }
+    }
     return res.status(200).json({
       success: true,
-      data: products,
+      data: productData,
     });
   } catch (err) {
     console.log({ err });
