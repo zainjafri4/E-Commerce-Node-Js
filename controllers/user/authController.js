@@ -2,7 +2,7 @@ const User = require("../../models/userModels/auth.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
-const generateToken = require("../../utils/generateToke.js");
+const generateToken = require("../../utils/token/generateToke.js");
 const crypto = require("crypto");
 const {
   customEmail,

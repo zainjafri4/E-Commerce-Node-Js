@@ -1,9 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/userModels/auth.js");
 
-const jwt = require("jsonwebtoken");
-const User = require("./models/User"); // Adjust the path as necessary
-
 const authMiddleware = async (req, res, next) => {
   // Get token from Authorization header
   const authHeader = req.headers["authorization"];
