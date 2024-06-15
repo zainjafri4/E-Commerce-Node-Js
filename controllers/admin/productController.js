@@ -12,6 +12,7 @@ exports.createProduct = async (req, res) => {
   }
 
   try {
+    const userId = req.user._id;
     const { title, description, category, price, stock, color } = req.body;
 
     const ImageFileName = req?.file?.filename;
@@ -26,6 +27,7 @@ exports.createProduct = async (req, res) => {
     }
 
     const product = await Product.create({
+      userId,
       title,
       description,
       category,
