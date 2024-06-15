@@ -189,18 +189,25 @@ exports.getMyProducts = async (req, res) => {
 exports.deleteProduct = async (req, res) => {
   const { productId } = req.params;
   try {
+    // Remove the product from all carts
+    await Cart.updateMany(
+      { "items.productId": productId },
+      { $pull: { items: { productId } } }
+    );
+
+    // Delete the product
     const result = await Product.findByIdAndDelete(productId);
-    if (result) {
-      return res.status(200).json({
-        success: true,
-        message: "Product deleted successfully",
-      });
-    } else {
+    if (!result) {
       return res.status(404).json({
         success: false,
         message: "Product not found",
       });
     }
+
+    return res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
   } catch (error) {
     console.log({ error });
     return res.status(500).json({
