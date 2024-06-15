@@ -185,4 +185,44 @@ const getUserCart = async (req, res) => {
   }
 };
 
-module.exports = { addToCart, removeFromCart, getUserCart, decreaseQuantity };
+const emptyCart = async (req, res) => {
+  try {
+    const user = req.user;
+    const userId = user?._id;
+
+    let cart = await Cart.findOne({ userId });
+    if (cart) {
+      cart.items = [];
+      await cart.save();
+      return res.status(201).json({
+        success: true,
+        data: cart,
+        message: "Cart Cleared",
+      });
+    } else {
+      let cart = await Cart.create({
+        userId,
+        items: [],
+      });
+      return res.status(201).json({
+        success: true,
+        data: cart,
+        message: "Cart Cleared",
+      });
+    }
+  } catch (error) {
+    console.log({ error });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      data: error.message,
+    });
+  }
+};
+module.exports = {
+  addToCart,
+  removeFromCart,
+  getUserCart,
+  decreaseQuantity,
+  emptyCart,
+};

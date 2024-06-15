@@ -4,6 +4,7 @@ const {
   removeFromCart,
   getUserCart,
   decreaseQuantity,
+  emptyCart,
 } = require("../../controllers/user/cartController.js");
 const authMiddleware = require("../../middleware/auth/authMiddleware.js");
 
@@ -20,5 +21,8 @@ router.post("/remove", authMiddleware, removeFromCart);
 
 // Get user cart route
 router.get("/getCart", authMiddleware, getUserCart);
+
+// Empty The Cart
+router.post("/empty-cart", authMiddleware, emptyCart);
 
 module.exports = router;
