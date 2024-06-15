@@ -310,6 +310,7 @@ const placeOrder = async (req, res) => {
           <li>Sort Code: 01-12-45</li>
         </ul>
         <p>Thank you for your order!</p>
+        <p>Please complete the payment to the above bank account and send the transaction receipt to ${process.env.FROM_EMAIL}, Once the order is confirmed your order will be shipped</p>
       </div>
     </body>
     </html>

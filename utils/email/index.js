@@ -14,8 +14,9 @@ exports.customEmail = async (email, subject, body) => {
 
     await transporter.sendMail({
       from: process.env?.FROM_EMAIL,
+      to: email,
       subject: subject,
-      text: body,
+      html: body,
     });
     console.log("Email Sent Successfully To: ", email);
   } catch (error) {
