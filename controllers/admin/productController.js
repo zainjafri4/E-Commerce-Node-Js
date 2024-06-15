@@ -243,10 +243,11 @@ exports.addProductReview = async (req, res) => {
       });
     }
 
-    let newReview = await ProductReviews.find({
+    let newReview = await ProductReviews.findOne({
       userId,
       productId,
     });
+
     if (newReview) {
       newReview.stars = stars;
       newReview.description = description;
