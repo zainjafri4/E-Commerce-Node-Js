@@ -6,6 +6,8 @@ const path = require("path");
 const { validationResult } = require("express-validator");
 const generateToken = require("../../utils/token/generateToke.js");
 const crypto = require("crypto");
+const moment = require("moment");
+
 const {
   customEmail,
   emailVerification,
@@ -291,7 +293,7 @@ exports.requestPasswordReset = async (req, res) => {
     // Save the updated user
     await user.save();
 
-    const resetUrl = `http://localhost:8000/api/products/reset-password/${resetPasswordToken}`;
+    const resetUrl = `${process.env.WEB_URL}/api/products/reset-password/${resetPasswordToken}`;
     subject = "Password Reset Request";
     const body = `
       <p>Dear User,</p>
