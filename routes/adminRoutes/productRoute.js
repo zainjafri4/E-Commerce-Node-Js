@@ -23,8 +23,8 @@ const {
 router.post(
   "/create",
   authMiddleware,
-  productValidator(),
   UploadImageMulter(),
+  productValidator(),
   createProduct
 );
 
