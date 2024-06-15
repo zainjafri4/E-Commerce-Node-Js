@@ -1,4 +1,4 @@
-const User = require("../../models/userModels/cartModels.js");
+const User = require("../../models/userModels/auth.js");
 const Product = require("../../models/adminModels/productModels.js");
 const Cart = require("../../models/userModels/cartModels.js");
 const { customEmail } = require("../../utils/email/index.js");
