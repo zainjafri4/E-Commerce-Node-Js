@@ -196,30 +196,19 @@ exports.deleteProduct = async (req, res) => {
       { $pull: { items: { productId } } }
     );
 
-    console.log({ CartResult }); // Log the CartResult to see details of the update operation
-
-    if (CartResult.nModified > 0) {
-      // nModified indicates how many documents were modified
-
-      // Delete the product
-      const result = await Product.findByIdAndDelete(productId);
-      if (!result) {
-        return res.status(404).json({
-          success: false,
-          message: "Product not found",
-        });
-      }
-
-      return res.status(200).json({
-        success: true,
-        message: "Product deleted &  removed from carts successfully",
-      });
-    } else {
+    // Delete the product
+    const result = await Product.findByIdAndDelete(productId);
+    if (!result) {
       return res.status(404).json({
         success: false,
-        message: "Product not found in any carts",
+        message: "Product not found",
       });
     }
+
+    return res.status(200).json({
+      success: true,
+      message: "Product deleted & Removed from Carts Successfully",
+    });
   } catch (error) {
     console.log({ error });
     return res.status(500).json({
