@@ -220,6 +220,7 @@ exports.deleteProduct = async (req, res) => {
 };
 
 exports.addProductReview = async (req, res) => {
+  const userId = req.user._id;
   const { stars, description } = req.body;
   const { productId } = req.params;
 
@@ -242,12 +243,22 @@ exports.addProductReview = async (req, res) => {
       });
     }
 
-    // Create a new product review
-    const newReview = new ProductReviews({
-      description,
-      stars,
+    let newReview = await ProductReviews.find({
+      userId,
       productId,
     });
+    if (newReview) {
+      newReview.stars = stars;
+      newReview.description = description;
+    } else {
+      // Create a new product review
+      newReview = new ProductReviews({
+        userId,
+        stars,
+        description,
+        productId,
+      });
+    }
 
     // Save the review
     await newReview.save();
