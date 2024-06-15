@@ -344,7 +344,7 @@ exports.resetPassword = async (req, res) => {
     const user = await User.findById(userId);
     if (
       !user ||
-      user.resetPasswordToken !== token ||
+      user.resetPasswordToken !== decoded?.resetToken ||
       user.resetPasswordExpires < Date.now()
     ) {
       return res.status(400).json({
