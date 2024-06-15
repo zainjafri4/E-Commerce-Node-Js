@@ -80,7 +80,8 @@ exports.signup = async (req, res) => {
       type,
       profileImageName: profileImageName || "dummy",
       emailVerificationToken: verificationToken,
-      emailVerificationTokenExpires: Date.now() + 3600000, // 1 hour
+      // Set emailVerificationTokenExpires to 15 days from now inline
+      emailVerificationTokenExpires: Date.now() + 15 * 24 * 60 * 60 * 1000,
     });
 
     const verificationLink = `${process.env.WEB_URL}/api/auth/verify-email?token=${verificationToken}`;
