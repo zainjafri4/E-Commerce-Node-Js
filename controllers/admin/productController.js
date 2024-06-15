@@ -64,8 +64,7 @@ exports.updateProduct = async (req, res) => {
 
   try {
     const { productId } = req.params;
-    const { title, description, category, price, stock, color, image_url } =
-      req.body;
+    const { title, description, category, price, stock, color } = req.body;
 
     const ImageFileName = req?.file?.filename;
 
