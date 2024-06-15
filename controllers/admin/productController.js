@@ -63,7 +63,7 @@ exports.updateProduct = async (req, res) => {
   }
 
   try {
-    const productId = req.params.id;
+    const { productId } = req.params;
     const { title, description, category, price, stock, color, image_url } =
       req.body;
 
