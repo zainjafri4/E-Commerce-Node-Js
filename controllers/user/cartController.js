@@ -221,7 +221,6 @@ const emptyCart = async (req, res) => {
   }
 };
 
-// Function to place an order and send invoice
 const placeOrder = async (req, res) => {
   const userId = req.user._id; // Assuming user is authenticated and userId is available
 
@@ -246,8 +245,33 @@ const placeOrder = async (req, res) => {
       });
     }
 
-    // Calculate total price
+    // Check product stock and calculate total price
     let totalPrice = 0;
+    let outOfStock = false;
+
+    for (const item of cart.items) {
+      const product = item.productId;
+      if (product.stock < item.quantity) {
+        outOfStock = true;
+        break;
+      }
+      const itemTotal = item.quantity * product.price;
+      totalPrice += itemTotal;
+    }
+
+    if (outOfStock) {
+      return res.status(422).json({
+        success: false,
+        message: "Stock is less than quantity for one or more products",
+      });
+    }
+
+    // Deduct product stock and save
+    for (const item of cart.items) {
+      const product = item.productId;
+      product.stock -= item.quantity;
+      await product.save(); // Save updated product stock
+    }
 
     // Create HTML for invoice dynamically
     let invoiceHtml = `
@@ -282,10 +306,9 @@ const placeOrder = async (req, res) => {
     `;
 
     // Loop through cart items to add each product to the invoice
-    cart.items.forEach((item) => {
+    for (const item of cart.items) {
       const product = item.productId;
       const itemTotal = item.quantity * product.price;
-      totalPrice += itemTotal;
 
       invoiceHtml += `
         <tr>
@@ -295,7 +318,7 @@ const placeOrder = async (req, res) => {
           <td>${itemTotal}</td>
         </tr>
       `;
-    });
+    }
 
     // Add total price to the invoice
     invoiceHtml += `
@@ -316,7 +339,11 @@ const placeOrder = async (req, res) => {
     </html>
     `;
 
+    // Send invoice email
     await customEmail(user?.email, "Order Invoice", invoiceHtml);
+
+    // Clear cart after email is sent
+    await Cart.updateOne({ userId }, { $set: { items: [] } });
 
     return res.status(200).json({
       success: true,
@@ -324,9 +351,10 @@ const placeOrder = async (req, res) => {
     });
   } catch (error) {
     console.error("Error placing order:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Internal Server Error" });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
   }
 };
 
