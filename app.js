@@ -34,6 +34,9 @@ mongoose
     process.exit(1);
   });
 
+// Import and run the scheduled job
+require("./utils/cron/productExpiry.js");
+
 // Use product routes
 app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
