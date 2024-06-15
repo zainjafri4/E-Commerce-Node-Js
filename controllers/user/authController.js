@@ -409,9 +409,8 @@ exports.verifyUserAccount = async (req, res) => {
   const { token } = req.query;
 
   if (!token) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Invalid or missing token." });
+    // Redirect to token_invalid.html if token is missing
+    return res.redirect("../../static/token_invalid.html");
   }
 
   try {
@@ -421,27 +420,22 @@ exports.verifyUserAccount = async (req, res) => {
     });
 
     if (!user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid or expired token." });
+      // Redirect to token_invalid.html if token is invalid or expired
+      return res.redirect("../../static/token_invalid.html");
     }
 
+    // Update user email verification status
     user.emailVerification = true;
     user.emailVerificationToken = undefined;
     user.emailVerificationTokenExpires = undefined;
 
     await user.save();
 
-    return res.status(200).json({
-      success: true,
-      message: "Email verified successfully!",
-    });
+    // Redirect to account_verified.html after successful verification
+    return res.redirect("../../static/account_verified.html");
   } catch (error) {
-    console.log({ error });
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error",
-      data: error.message,
-    });
+    console.error("Error verifying user account:", error);
+    // Redirect to token_invalid.html on internal server error
+    return res.redirect("../../static/token_invalid.html");
   }
 };

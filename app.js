@@ -17,8 +17,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Serve static files from the 'upload/images' directory
+// Serve static files from the 'upload/images' for profile & product images directory
 app.use("/upload/images", express.static("upload/images/"));
+
+// Serve static files from the 'static' directory for account verification pages
+app.use("/static", express.static("static/"));
 
 // Connect to MongoDB
 mongoose
