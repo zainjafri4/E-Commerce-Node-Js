@@ -8,9 +8,6 @@ const productValidator = () => {
     body("price")
       .isNumeric()
       .withMessage("Price is required and Should be a number"),
-    body("image_url")
-      .isURL()
-      .withMessage("Image URL is required and Should be a valid URL"),
   ];
 };
 

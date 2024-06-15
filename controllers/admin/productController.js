@@ -2,6 +2,8 @@
 const Product = require("../../models/adminModels/productModels.js");
 const { validationResult } = require("express-validator");
 const ProductReviews = require("../../models/adminModels/productReviews.js");
+const fs = require("fs");
+const path = require("path");
 
 exports.createProduct = async (req, res) => {
   const errors = validationResult(req);
@@ -12,7 +14,7 @@ exports.createProduct = async (req, res) => {
   try {
     const { title, description, category, price, stock, color } = req.body;
 
-    const ImageFileName = req?.file?.originalname;
+    const ImageFileName = req?.file?.filename;
 
     // Check if a product with the same title already exists
     const existingProduct = await Product.findOne({ title });
@@ -62,7 +64,7 @@ exports.updateProduct = async (req, res) => {
     const { title, description, category, price, stock, color, image_url } =
       req.body;
 
-    const ImageFileName = req?.file?.originalname;
+    const ImageFileName = req?.file?.filename;
 
     const product = await Product.findById(productId);
 
@@ -95,8 +97,14 @@ exports.updateProduct = async (req, res) => {
 
     if (ImageFileName) {
       if (product.ImageFileName) {
-        const path = `../../upload/images/${product.ImageFileName}`;
-        fs.unlinkSync(path);
+        const filePath = path.join(
+          __dirname,
+          "../../upload/images",
+          product.ImageFileName
+        );
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
       }
       product.ImageFileName = ImageFileName;
     }

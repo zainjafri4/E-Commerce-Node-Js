@@ -23,7 +23,7 @@ const {
 } = require("../../utils/multer/multerImageUpload.js");
 
 // Route for user signup
-router.post("/signup", signupValidator, UploadImageMulter(), signup);
+router.post("/signup", UploadImageMulter(), signup);
 
 // Route for user login
 router.post("/login", loginValidator, login);

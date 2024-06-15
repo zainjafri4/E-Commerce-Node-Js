@@ -8,9 +8,13 @@ const storage = multer.diskStorage({
     cb(null, "upload/images"); // Destination folder for images
   },
   filename: function (req, file, cb) {
+    const originalName = path.basename(
+      file.originalname,
+      path.extname(file.originalname)
+    );
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const extension = path.extname(file.originalname);
-    cb(null, file.fieldname + "-" + uniqueSuffix + extension);
+    cb(null, originalName + "-" + uniqueSuffix + extension);
   },
 });
 
@@ -29,14 +33,14 @@ const upload = multer({ storage: storage, fileFilter: fileFilter });
 // Validator function for profile picture upload
 const UploadImageMulter = () => {
   return [
-    upload.single("profileImage"),
-    check("profileImage").custom((value, { req }) => {
+    upload.single("imageUpload"),
+    check("imageUpload").custom((value, { req }) => {
       if (!req.file) {
         throw new Error("No image file uploaded!");
       }
 
       const allowedExtensions = [".jpg", ".jpeg", ".png"];
-      const ext = path.extname(req?.file?.originalname).toLowerCase();
+      const ext = path.extname(req.file.originalname).toLowerCase();
       if (!allowedExtensions.includes(ext)) {
         throw new Error("Only jpeg, jpg, or png files are allowed!");
       }

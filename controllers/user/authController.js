@@ -1,6 +1,8 @@
 const User = require("../../models/userModels/auth.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
+const path = require("path");
 const { validationResult } = require("express-validator");
 const generateToken = require("../../utils/token/generateToke.js");
 const crypto = require("crypto");
@@ -32,7 +34,7 @@ exports.signup = async (req, res) => {
       type,
     } = req.body;
 
-    const profileImageName = req?.file?.originalname;
+    const profileImageName = req?.file?.filename;
 
     if (!firstName || !lastName) {
       return res.status(422).json({
@@ -150,6 +152,7 @@ exports.login = async (req, res) => {
       city: user?.city,
       country: user?.country,
       zipCode: user?.zipCode,
+      profileImageName: user?.profileImageName,
       token: "Bearer " + generateToken(user?._id),
     };
 
@@ -185,7 +188,7 @@ exports.updateUser = async (req, res) => {
       type,
     } = req.body;
 
-    const profileImageName = req?.file?.originalname;
+    const profileImageName = req?.file?.filename;
 
     const user = await User.findById(userId);
 
@@ -207,8 +210,14 @@ exports.updateUser = async (req, res) => {
     }
     if (profileImageName) {
       if (user.profileImageName) {
-        const path = `../../upload/images/${user.profileImageName}`;
-        fs.unlinkSync(path);
+        const filePath = path.join(
+          __dirname,
+          "../../upload/images",
+          user.profileImageName
+        );
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
       }
       user.profileImageName = profileImageName;
     }
