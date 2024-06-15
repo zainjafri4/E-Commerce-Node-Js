@@ -266,6 +266,7 @@ exports.requestPasswordReset = async (req, res) => {
   try {
     const { email } = req.body;
 
+    console.log({ email });
     // Find the user by email
     const user = await User.findOne({ email });
     if (!user) {
@@ -294,7 +295,7 @@ exports.requestPasswordReset = async (req, res) => {
     // Save the updated user
     await user.save();
 
-    const resetUrl = `${process.env.WEB_URL}/api/products/reset-password/${resetPasswordToken}`;
+    const resetUrl = `${process.env.FE_URL}/reset-password/${resetPasswordToken}`;
     subject = "Password Reset Request";
     const body = `
       <p>Dear User,</p>
