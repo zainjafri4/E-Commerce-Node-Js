@@ -35,7 +35,6 @@ const UploadImageMulter = () => {
     upload.single("imageUpload"),
     check("imageUpload").custom((value, { req }) => {
       if (!req.file) {
-        throw new Error("No image file uploaded!");
       }
       return true;
     }),
