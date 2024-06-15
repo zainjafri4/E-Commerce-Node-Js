@@ -78,7 +78,7 @@ exports.signup = async (req, res) => {
       country,
       zipCode,
       type,
-      profileImageName,
+      profileImageName: profileImageName || "dummy",
       emailVerificationToken: verificationToken,
       emailVerificationTokenExpires: Date.now() + 3600000, // 1 hour
     });
@@ -147,14 +147,14 @@ exports.login = async (req, res) => {
       id: user?._id,
       name: user?.name,
       email: user?.email,
-      type: user?.type,
-      number: user?.phoneNo,
+      type: user?.type || "-",
+      number: user?.phoneNo || "-",
       emailVerification: user?.emailVerification,
-      address: user?.address,
-      city: user?.city,
-      country: user?.country,
-      zipCode: user?.zipCode,
-      profileImageName: user?.profileImageName,
+      address: user?.address || "-",
+      city: user?.city || "-",
+      country: user?.country || "-",
+      zipCode: user?.zipCode || "-",
+      profileImageName: user?.profileImageName || "-",
       token: "Bearer " + generateToken(user?._id),
     };
 

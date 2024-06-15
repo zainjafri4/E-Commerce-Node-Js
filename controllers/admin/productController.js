@@ -35,7 +35,7 @@ exports.createProduct = async (req, res) => {
       price,
       stock,
       color,
-      ImageFileName,
+      ImageFileName: ImageFileName || "dummy",
     });
 
     return res.status(201).json({

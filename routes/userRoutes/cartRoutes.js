@@ -5,6 +5,7 @@ const {
   getUserCart,
   decreaseQuantity,
   emptyCart,
+  placeOrder,
 } = require("../../controllers/user/cartController.js");
 const authMiddleware = require("../../middleware/auth/authMiddleware.js");
 
@@ -24,5 +25,8 @@ router.get("/getCart", authMiddleware, getUserCart);
 
 // Empty The Cart
 router.post("/empty-cart", authMiddleware, emptyCart);
+
+// Empty The Cart
+router.post("/place-order", authMiddleware, placeOrder);
 
 module.exports = router;
