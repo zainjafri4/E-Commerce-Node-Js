@@ -142,7 +142,16 @@ exports.getProducts = async (req, res) => {
     const products = await Product.find();
     if (products && products.length > 0) {
       for (const product of products) {
-        const reviews = await ProductReviews.find({ productId: product?._id });
+        const reviews = await ProductReviews.find({
+          productId: product?._id,
+        }).populate([
+          {
+            path: "userId",
+            select:
+              "name email phoneNo profileImageName type address city country zipCode",
+          },
+        ]);
+
         productData.push({ product, reviews });
       }
     }
@@ -169,7 +178,15 @@ exports.getMyProducts = async (req, res) => {
     const products = await Product.find({ userId });
     if (products && products.length > 0) {
       for (const product of products) {
-        const reviews = await ProductReviews.find({ productId: product?._id });
+        const reviews = await ProductReviews.find({
+          productId: product?._id,
+        }).populate([
+          {
+            path: "userId",
+            select:
+              "name email phoneNo profileImageName type address city country zipCode",
+          },
+        ]);
         productData.push({ product, reviews });
       }
     }
