@@ -289,9 +289,6 @@ exports.addProductReview = async (req, res) => {
     // Update product averageRating field
     product.averageRating = averageRating;
 
-    // Add the review to product reviews array
-    product.reviews.push(newReview?._id);
-
     // Save the updated product
     await product.save();
 
