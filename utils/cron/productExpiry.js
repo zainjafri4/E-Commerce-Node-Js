@@ -11,19 +11,20 @@ const deactivateOldProducts = async () => {
 
     const currentDate = moment();
 
-    // Iterate over each product
-    for (const product of products) {
-      // Compare created_at with the current date
-      if (
-        moment(product.created_at).isBefore(currentDate.subtract(30, "days"))
-      ) {
-        // Update the product's active status
-        product.active = false;
-        await product.save();
+    if (products && products.length > 0) {
+      // Iterate over each product
+      for (const product of products) {
+        // Compare created_at with the current date
+        if (
+          moment(product.created_at).isBefore(currentDate.subtract(30, "days"))
+        ) {
+          // Update the product's active status
+          product.active = false;
+          await product.save();
+        }
       }
+      console.log("Products Expired successfully!");
     }
-
-    console.log("Products Expired successfully!");
   } catch (error) {
     console.error("Error updating products:", error);
   }

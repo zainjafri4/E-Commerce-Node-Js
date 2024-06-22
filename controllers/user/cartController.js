@@ -282,7 +282,34 @@ const placeOrder = async (req, res) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Order Invoice</title>
         <style>
-          /* Add your CSS styles here */
+          body {
+            font-family: sans-serif;
+          }
+          .invoice-container {
+            width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+          }
+          h2 {
+            text-align: center;
+          }
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+          }
+          th, td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ccc;
+          }
+          th {
+            background-color: #f2f2f2;
+          }
+          .total-price {
+            font-weight: bold;
+          }
         </style>
       </head>
       <body>
