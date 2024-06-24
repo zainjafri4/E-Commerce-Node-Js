@@ -266,6 +266,19 @@ const placeOrder = async (req, res) => {
       });
     }
 
+    // Calculate shipping charges
+    let shippingCharge = 0;
+    if (totalPrice <= 200) {
+      shippingCharge = 30;
+    } else if (totalPrice <= 400) {
+      shippingCharge = 25;
+    } else if (totalPrice > 401) {
+      shippingCharge = 20;
+    }
+
+    // Add shipping charges to total price
+    const finalTotalPrice = totalPrice + shippingCharge;
+
     // Deduct product stock and save
     for (const item of cart.items) {
       const product = item.productId;
@@ -347,11 +360,13 @@ const placeOrder = async (req, res) => {
       `;
     }
 
-    // Add total price to the invoice
+    // Add total price and shipping charges to the invoice
     invoiceHtml += `
           </tbody>
         </table>
-        <p><strong>Total Price:</strong> ${totalPrice}</p>
+        <p><strong>Total Price (Products):</strong> ${totalPrice}</p>
+        <p><strong>Shipping Charges:</strong> ${shippingCharge}</p>
+        <p><strong>Final Total Price:</strong> ${finalTotalPrice}</p>
         <p><strong>Company Bank Account:</strong></p>
         <ul>
           <li>Account Name: Market Wizards </li>
