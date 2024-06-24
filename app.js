@@ -44,6 +44,12 @@ require("./utils/cron/productExpiry.js");
 app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/cart", cartRoutes);
+
+// Static GET API endpoint
+app.get('/status', (req, res) => {
+  res.json({ message: 'Backend is working!' });
+});
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server is Now Running On Port ${PORT}`);
