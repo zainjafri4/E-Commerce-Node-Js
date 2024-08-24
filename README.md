@@ -54,7 +54,7 @@ This project is a Node.js backend for a small e-commerce application, offering e
    npm start
    ```
 
-6. Access the API at `http://localhost:3000`.
+6. Access the API at `http://localhost:5000`.
 
 ## Usage
 
