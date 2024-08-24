@@ -60,15 +60,6 @@ This project is a Node.js backend for a small e-commerce application, offering e
 
 - Use the API to manage users, products, orders, and more.
 - Integrate the backend with a frontend application for a complete e-commerce experience.
-
-## Contributing
-
-Feel free to fork the repository and submit pull requests for improvements or new features.
-
-## License
-
-This project is licensed under the MIT License.
-
 ---
 
 ## Skills
